@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PredictiveRide | Command Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #0c1324;
+            color: #dce1fb;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glow-cyan { box-shadow: 0 0 20px rgba(47, 217, 244, 0.2); }
+        .glow-purple { box-shadow: 0 0 20px rgba(111, 0, 190, 0.2); }
+        .tilt-card:hover {
+            transform: perspective(1000px) rotateX(1deg) rotateY(1deg);
+            border-color: rgba(255, 255, 255, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .prediction-stream {
+            mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+        }
+        @keyframes pulse-cyan {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+        .pulse-dot { animation: pulse-cyan 2s infinite ease-in-out; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#d6a9ff",
+                        "primary-fixed-dim": "#adc6ff",
+                        "on-error": "#690005",
+                        "error-container": "#93000a",
+                        "on-tertiary-container": "#002f36",
+                        "inverse-surface": "#dce1fb",
+                        "tertiary-container": "#009fb4",
+                        "surface-container-low": "#151b2d",
+                        "on-tertiary": "#00363e",
+                        "on-background": "#dce1fb",
+                        "outline": "#8c909f",
+                        "surface-container-highest": "#2e3447",
+                        "on-secondary": "#490080",
+                        "on-primary-fixed-variant": "#004395",
+                        "on-surface-variant": "#c2c6d6",
+                        "secondary-fixed-dim": "#ddb7ff",
+                        "surface-dim": "#0c1324",
+                        "on-primary-container": "#00285d",
+                        "secondary-fixed": "#f0dbff",
+                        "secondary": "#ddb7ff",
+                        "on-secondary-fixed-variant": "#6900b3",
+                        "surface-container-high": "#23293c",
+                        "inverse-primary": "#005ac2",
+                        "tertiary": "#2fd9f4",
+                        "surface-tint": "#adc6ff",
+                        "on-primary": "#002e6a",
+                        "on-error-container": "#ffdad6",
+                        "secondary-container": "#6f00be",
+                        "primary": "#adc6ff",
+                        "surface-variant": "#2e3447",
+                        "inverse-on-surface": "#2a3043",
+                        "primary-container": "#4d8eff",
+                        "on-tertiary-fixed": "#001f25",
+                        "background": "#0c1324",
+                        "on-tertiary-fixed-variant": "#004e5a",
+                        "on-surface": "#dce1fb",
+                        "on-primary-fixed": "#001a42",
+                        "on-secondary-fixed": "#2c0051",
+                        "tertiary-fixed": "#a2eeff",
+                        "surface": "#0c1324",
+                        "surface-container-lowest": "#070d1f",
+                        "primary-fixed": "#d8e2ff",
+                        "error": "#ffb4ab",
+                        "surface-bright": "#33394c",
+                        "outline-variant": "#424754",
+                        "surface-container": "#191f31",
+                        "tertiary-fixed-dim": "#2fd9f4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "bento-gap": "16px",
+                        "margin-mobile": "20px",
+                        "margin-desktop": "80px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Space Grotesk"],
+                        "display-lg": ["Space Grotesk"],
+                        "label-md": ["Inter"],
+                        "headline-sm": ["Space Grotesk"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-sm": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="overflow-x-hidden selection:bg-tertiary selection:text-on-tertiary">
+<!-- SideNavBar Integration -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface-container-lowest/80 backdrop-blur-lg border-r border-white/10 shadow-2xl flex flex-col py-6 gap-y-2 z-50">
+<div class="px-6 mb-8">
+<h1 class="font-headline-sm text-headline-sm text-primary font-bold">PredictiveRide AI</h1>
+<p class="text-on-surface-variant font-label-md text-[10px] tracking-widest uppercase mt-1">Enterprise Tier</p>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-xl transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md">Home</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 bg-primary-container text-on-primary-container rounded-xl shadow-lg shadow-primary/20 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="insights" style="font-variation-settings: 'FILL' 1;">insights</span>
+<span class="font-label-md">Analytics</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-xl transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="online_prediction">online_prediction</span>
+<span class="font-label-md">Prediction Feed</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-xl transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-label-md">History</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/50 rounded-xl transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md">Settings</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full py-4 bg-tertiary-container text-on-tertiary-container rounded-xl font-bold font-label-md flex items-center justify-center gap-2 hover:brightness-110 transition-all active:scale-95 shadow-lg shadow-tertiary/20">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                New Analysis
+            </button>
+<div class="flex items-center gap-3 mt-6 p-2 border-t border-white/10 pt-6">
+<div class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-tertiary p-[1px]">
+<img alt="User Profile" class="w-full h-full rounded-full object-cover" data-alt="A professional headshot of a senior executive in a modern tech setting. The individual is wearing a sharp, dark business suit and has a confident, focused expression. The background is a soft-focus office with sleek glass partitions and cool blue and white ambient lighting, reflecting a premium corporate environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBl7lU3tvhCW2ZRKlpWdZHXV8ZkrGkwynlsGqbAAT9dNat66Iwh2Kab0LN3sHkwPBVHwllPfezsZeA5UhKzahgbhQnvwJM9YXRFiY5ccI39uIzhLMc9Uyg1Gt69ovNKhHCnXpoimS4ItQyNUDrHgTEwecaB0Fdg-gQWfB1MQ0UCzVOqSvObK1EYW8K1bRXLu648SA7UmEfcFaqkDpxqC8VlceNoaQBY5Su4d1xIPgvPr6ScGKIIxf43BqAC_aIMVX2hXvlDFTDuFTn3"/>
+</div>
+<div class="flex-1 overflow-hidden">
+<p class="text-on-surface font-bold text-sm truncate">Alex Chen</p>
+<p class="text-on-surface-variant text-[10px] truncate">Ops Director</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 min-h-screen p-gutter flex flex-col gap-gutter">
+<!-- Header Section -->
+<header class="flex justify-between items-end mb-4">
+<div>
+<div class="flex items-center gap-3 text-tertiary mb-1">
+<span class="w-2 h-2 rounded-full bg-tertiary pulse-dot"></span>
+<span class="font-label-md text-[12px] uppercase tracking-[0.2em]">System Online</span>
+</div>
+<h1 class="font-display-lg text-headline-md text-on-surface tracking-tight">Command Center</h1>
+</div>
+<div class="text-right">
+<div class="font-headline-sm text-on-surface tracking-widest font-light" id="live-clock">12:45:08 PM</div>
+<div class="flex items-center gap-2 justify-end text-on-surface-variant font-label-md mt-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="verified">verified</span>
+                    Enterprise Tier Access
+                </div>
+</div>
+</header>
+<!-- Summary Row (4 Cards) -->
+<section class="grid grid-cols-4 gap-gutter">
+<div class="glass-panel tilt-card rounded-2xl p-6 glow-cyan">
+<p class="text-on-surface-variant font-label-md mb-2">Total Rides</p>
+<div class="flex items-end justify-between">
+<h3 class="font-headline-md text-on-surface">24,582</h3>
+<span class="text-tertiary font-label-md flex items-center gap-1">+12.4% <span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span></span>
+</div>
+</div>
+<div class="glass-panel tilt-card rounded-2xl p-6 glow-purple">
+<p class="text-on-surface-variant font-label-md mb-2">Cancellation Probability</p>
+<div class="flex items-end justify-between">
+<h3 class="font-headline-md text-secondary">0.084%</h3>
+<span class="text-error font-label-md flex items-center gap-1">+2.1% <span class="material-symbols-outlined text-sm" data-icon="warning">warning</span></span>
+</div>
+</div>
+<div class="glass-panel tilt-card rounded-2xl p-6">
+<p class="text-on-surface-variant font-label-md mb-2">Potential Rev Loss</p>
+<div class="flex items-end justify-between">
+<h3 class="font-headline-md text-on-surface">$3,120.00</h3>
+<span class="text-tertiary font-label-md flex items-center gap-1">-15% <span class="material-symbols-outlined text-sm" data-icon="trending_down">trending_down</span></span>
+</div>
+</div>
+<div class="glass-panel tilt-card rounded-2xl p-6">
+<p class="text-on-surface-variant font-label-md mb-2">Driver Performance</p>
+<div class="flex items-end justify-between">
+<h3 class="font-headline-md text-primary">98.2</h3>
+<div class="flex gap-1 text-primary">
+<span class="material-symbols-outlined text-[18px]" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Grid Main Content -->
+<div class="grid grid-cols-12 gap-gutter flex-1">
+<!-- Central Heatmap (8 columns) -->
+<div class="col-span-8 flex flex-col gap-gutter">
+<div class="glass-panel rounded-3xl overflow-hidden flex-1 relative min-h-[500px]">
+<div class="absolute top-6 left-6 z-10 flex flex-col gap-2">
+<div class="glass-panel bg-surface/60 px-4 py-2 rounded-full flex items-center gap-3">
+<span class="material-symbols-outlined text-tertiary" data-icon="map">map</span>
+<span class="font-label-md text-on-surface">Real-time Cancellation Heatmap</span>
+</div>
+<div class="flex gap-2">
+<div class="glass-panel bg-surface/60 px-3 py-1 rounded-full text-[10px] text-tertiary uppercase tracking-wider font-bold">Midtown: 35% Risk</div>
+<div class="glass-panel bg-surface/60 px-3 py-1 rounded-full text-[10px] text-secondary uppercase tracking-wider font-bold">Downtown: Stable</div>
+</div>
+</div>
+<img class="w-full h-full object-cover grayscale opacity-40 mix-blend-screen" data-alt="A sophisticated digital city map overlay featuring glowing neon cyan and deep purple data visualizations. High-risk zones are highlighted with luminous pulses and heat signatures. The aesthetic is dark and futuristic, with intricate road networks and data nodes glowing against a charcoal-black topographical base, reminiscent of high-end automotive navigation displays." data-location="New York City" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBX8rF779AmX34Gu7d850KigqIVmmCCZJQeyyMvEWlkQLStL_KqLBvoXraBkYKFK3f0grbdUnNw2SlqEaHcNOzeqdQX35gLP5FQhIWHFHgi7ShAwZXMJtII_7sd7kI82N-mFwa8UHGJKwYFpXC6R8X4s0Bj9oUCvQLk3QXHc-bW9kEK_HMlNHLOd1iKACZ0Nk2HcMTXIp9y3ndTmjWdPiwGgJv7YAe2rCy6gqCOLOSfsGFtmcgBcEi9HsQkbxeufRLheVotnGyF-MdE"/>
+<!-- SVG Overlay for Heatmap clusters -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none">
+<circle class="animate-pulse" cx="45%" cy="40%" fill="url(#grad-cyan)" r="60"></circle>
+<circle class="opacity-50" cx="30%" cy="65%" fill="url(#grad-purple)" r="40"></circle>
+<circle class="opacity-40" cx="65%" cy="35%" fill="url(#grad-cyan)" r="30"></circle>
+<defs>
+<radialgradient id="grad-cyan">
+<stop offset="0%" stop-color="#2fd9f4" stop-opacity="0.5"></stop>
+<stop offset="100%" stop-color="#2fd9f4" stop-opacity="0"></stop>
+</radialgradient>
+<radialgradient id="grad-purple">
+<stop offset="0%" stop-color="#6f00be" stop-opacity="0.5"></stop>
+<stop offset="100%" stop-color="#6f00be" stop-opacity="0"></stop>
+</radialgradient>
+</defs>
+</svg>
+</div>
+<!-- Middle Charts Row -->
+<div class="grid grid-cols-2 gap-gutter h-64">
+<div class="glass-panel rounded-2xl p-6 flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h4 class="font-headline-sm text-sm uppercase tracking-widest text-on-surface-variant">Weather Impact vs. Rates</h4>
+<span class="material-symbols-outlined text-tertiary" data-icon="cloud">cloud</span>
+</div>
+<div class="flex-1 flex items-end gap-2 px-2">
+<!-- Simple Bar Chart Mockup -->
+<div class="flex-1 bg-surface-container-high rounded-t-lg h-[40%]" title="Clear"></div>
+<div class="flex-1 bg-surface-container-high rounded-t-lg h-[45%]" title="Cloudy"></div>
+<div class="flex-1 bg-tertiary/40 rounded-t-lg h-[75%]" title="Rain"></div>
+<div class="flex-1 bg-tertiary rounded-t-lg h-[95%]" title="Storm"></div>
+<div class="flex-1 bg-surface-container-high rounded-t-lg h-[50%]" title="Fog"></div>
+</div>
+</div>
+<div class="glass-panel rounded-2xl p-6 flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h4 class="font-headline-sm text-sm uppercase tracking-widest text-on-surface-variant">Peak Hour Surge Prob</h4>
+<span class="material-symbols-outlined text-secondary" data-icon="bolt">bolt</span>
+</div>
+<div class="flex-1 flex items-end gap-1">
+<div class="flex-1 h-1/2 border-b border-white/10 relative">
+<div class="absolute bottom-0 w-full bg-secondary/20 h-full rounded-t"></div>
+<div class="absolute -bottom-6 w-full text-center text-[10px] text-on-surface-variant">08:00</div>
+</div>
+<div class="flex-1 h-3/4 border-b border-white/10 relative">
+<div class="absolute bottom-0 w-full bg-secondary h-full rounded-t shadow-[0_0_10px_rgba(173,198,255,0.3)]"></div>
+<div class="absolute -bottom-6 w-full text-center text-[10px] text-on-surface-variant">12:00</div>
+</div>
+<div class="flex-1 h-full border-b border-white/10 relative">
+<div class="absolute bottom-0 w-full bg-secondary/60 h-full rounded-t"></div>
+<div class="absolute -bottom-6 w-full text-center text-[10px] text-on-surface-variant">18:00</div>
+</div>
+<div class="flex-1 h-1/3 border-b border-white/10 relative">
+<div class="absolute bottom-0 w-full bg-secondary/20 h-full rounded-t"></div>
+<div class="absolute -bottom-6 w-full text-center text-[10px] text-on-surface-variant">22:00</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Sidebar Panel (4 columns) -->
+<div class="col-span-4 flex flex-col gap-gutter">
+<div class="glass-panel rounded-3xl flex-1 flex flex-col overflow-hidden">
+<div class="p-6 border-b border-white/5 bg-white/5">
+<div class="flex justify-between items-center">
+<h3 class="font-headline-sm text-on-surface">Live Prediction Feed</h3>
+<span class="text-xs bg-tertiary/20 text-tertiary px-2 py-1 rounded font-bold">LIVE</span>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto prediction-stream space-y-4 p-6">
+<!-- Prediction Item -->
+<div class="p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] transition-colors group">
+<div class="flex justify-between mb-2">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">Ride #9421 • NYC Midtown</span>
+<span class="px-2 py-0.5 rounded text-[9px] bg-error-container text-on-error-container font-black">HIGH RISK</span>
+</div>
+<p class="text-sm font-medium mb-1">Cancellation: 84.2%</p>
+<div class="w-full bg-surface-container-high h-1 rounded-full overflow-hidden">
+<div class="bg-error h-full" style="width: 84%"></div>
+</div>
+</div>
+<!-- Prediction Item -->
+<div class="p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] transition-colors">
+<div class="flex justify-between mb-2">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">Ride #9418 • Brooklyn Hts</span>
+<span class="px-2 py-0.5 rounded text-[9px] bg-surface-container-highest text-on-surface font-black">LOW RISK</span>
+</div>
+<p class="text-sm font-medium mb-1">Cancellation: 12.5%</p>
+<div class="w-full bg-surface-container-high h-1 rounded-full overflow-hidden">
+<div class="bg-primary h-full" style="width: 12%"></div>
+</div>
+</div>
+<!-- Prediction Item -->
+<div class="p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] transition-colors">
+<div class="flex justify-between mb-2">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">Ride #9415 • JFK Airport</span>
+<span class="px-2 py-0.5 rounded text-[9px] bg-secondary-container text-on-secondary-container font-black">MEDIUM RISK</span>
+</div>
+<p class="text-sm font-medium mb-1">Cancellation: 45.8%</p>
+<div class="w-full bg-surface-container-high h-1 rounded-full overflow-hidden">
+<div class="bg-secondary h-full" style="width: 45%"></div>
+</div>
+</div>
+<!-- Prediction Item -->
+<div class="p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] transition-colors">
+<div class="flex justify-between mb-2">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">Ride #9409 • Upper East</span>
+<span class="px-2 py-0.5 rounded text-[9px] bg-error-container text-on-error-container font-black">HIGH RISK</span>
+</div>
+<p class="text-sm font-medium mb-1">Cancellation: 72.1%</p>
+<div class="w-full bg-surface-container-high h-1 rounded-full overflow-hidden">
+<div class="bg-error h-full" style="width: 72%"></div>
+</div>
+</div>
+<!-- Prediction Item -->
+<div class="p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] transition-colors">
+<div class="flex justify-between mb-2">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">Ride #9398 • Long Island City</span>
+<span class="px-2 py-0.5 rounded text-[9px] bg-surface-container-highest text-on-surface font-black">LOW RISK</span>
+</div>
+<p class="text-sm font-medium mb-1">Cancellation: 08.4%</p>
+<div class="w-full bg-surface-container-high h-1 rounded-full overflow-hidden">
+<div class="bg-primary h-full" style="width: 8%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- AI Recommendation Engine -->
+<div class="glass-panel rounded-3xl p-6 bg-gradient-to-br from-tertiary/10 to-secondary/10 border-tertiary/20">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-tertiary flex items-center justify-center glow-cyan">
+<span class="material-symbols-outlined text-on-tertiary" data-icon="psychology" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-sm text-on-surface">AI Recommendation Engine</h4>
+<p class="text-[10px] text-tertiary uppercase tracking-wider font-bold">Optimization Suggestion</p>
+</div>
+</div>
+<div class="space-y-3">
+<div class="p-3 bg-white/5 rounded-lg border-l-4 border-tertiary">
+<p class="text-body-md text-sm text-on-surface-variant leading-relaxed">
+                                Recommend surge adjustment in <span class="text-on-surface font-bold">Midtown</span> due to predicted <span class="text-error font-bold">35% cancellation spike</span> in the next 15 minutes.
+                            </p>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 py-2 rounded-lg bg-tertiary/20 text-tertiary text-xs font-bold hover:bg-tertiary hover:text-on-tertiary transition-all">Apply Adjustment</button>
+<button class="px-3 py-2 rounded-lg bg-white/5 text-on-surface-variant text-xs font-bold hover:bg-white/10 transition-all">Dismiss</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Area -->
+<footer class="w-full py-10 mt-gutter border-t border-white/10 grid grid-cols-4 gap-gutter text-on-surface-variant">
+<div class="col-span-1">
+<p class="font-headline-sm text-sm text-primary font-bold mb-4">PredictiveRide AI</p>
+<p class="text-[12px] opacity-60">© 2024 PredictiveRide AI. Built with AI for high-velocity transportation ecosystems.</p>
+</div>
+<div class="col-span-1 flex flex-col gap-2 text-sm">
+<p class="font-bold text-on-surface mb-2">Product</p>
+<a class="hover:text-tertiary transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-tertiary transition-colors" href="#">Terms of Service</a>
+</div>
+<div class="col-span-1 flex flex-col gap-2 text-sm">
+<p class="font-bold text-on-surface mb-2">Developers</p>
+<a class="hover:text-tertiary transition-colors" href="#">API Docs</a>
+<a class="hover:text-tertiary transition-colors" href="#">Webhooks</a>
+</div>
+<div class="col-span-1 flex flex-col gap-2 text-sm">
+<p class="font-bold text-on-surface mb-2">Support</p>
+<a class="hover:text-tertiary transition-colors" href="#">Contact</a>
+<a class="hover:text-tertiary transition-colors" href="#">System Status</a>
+</div>
+</footer>
+</main>
+<!-- Persistent AI Floating Assistant -->
+<div class="fixed bottom-8 right-8 w-16 h-16 rounded-full bg-gradient-to-tr from-primary via-tertiary to-secondary glow-cyan flex items-center justify-center cursor-pointer hover:scale-110 transition-transform z-50 group" id="ai-orb">
+<div class="absolute inset-0 bg-white/20 rounded-full animate-ping opacity-20"></div>
+<span class="material-symbols-outlined text-on-primary text-[32px]" data-icon="auto_awesome">auto_awesome</span>
+<!-- Tooltip -->
+<div class="absolute right-20 bottom-0 glass-panel px-4 py-2 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+<p class="text-xs font-bold text-on-surface">Predictive Assistant Online</p>
+</div>
+</div>
+<script>
+        // Real-time Clock
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            document.getElementById('live-clock').textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Subtle Card Tilt Effect
+        document.querySelectorAll('.tilt-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+            });
+        });
+
+        // Prediction stream auto-scroll effect simulation
+        const stream = document.querySelector('.prediction-stream');
+        setInterval(() => {
+            const first = stream.firstElementChild;
+            if (first) {
+                first.style.opacity = '0';
+                first.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    stream.appendChild(first);
+                    first.style.opacity = '1';
+                    first.style.transform = 'translateY(0)';
+                }, 500);
+            }
+        }, 8000);
+    </script>
+</body></html>

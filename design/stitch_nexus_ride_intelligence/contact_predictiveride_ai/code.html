@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Contact Us | PredictiveRide AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-bright": "#33394c",
+                    "inverse-on-surface": "#2a3043",
+                    "tertiary-fixed": "#a2eeff",
+                    "on-tertiary-fixed": "#001f25",
+                    "surface-container": "#191f31",
+                    "surface-tint": "#adc6ff",
+                    "inverse-primary": "#005ac2",
+                    "surface-container-lowest": "#070d1f",
+                    "on-error": "#690005",
+                    "outline": "#8c909f",
+                    "on-surface-variant": "#c2c6d6",
+                    "on-primary-container": "#00285d",
+                    "on-surface": "#dce1fb",
+                    "tertiary-container": "#009fb4",
+                    "error-container": "#93000a",
+                    "on-secondary-fixed": "#2c0051",
+                    "on-secondary": "#490080",
+                    "on-primary-fixed": "#001a42",
+                    "on-error-container": "#ffdad6",
+                    "on-tertiary-container": "#002f36",
+                    "primary-container": "#4d8eff",
+                    "primary": "#adc6ff",
+                    "secondary-fixed": "#f0dbff",
+                    "surface-variant": "#2e3447",
+                    "on-background": "#dce1fb",
+                    "background": "#0c1324",
+                    "outline-variant": "#424754",
+                    "on-secondary-container": "#d6a9ff",
+                    "on-primary": "#002e6a",
+                    "surface-dim": "#0c1324",
+                    "primary-fixed-dim": "#adc6ff",
+                    "tertiary": "#2fd9f4",
+                    "surface-container-highest": "#2e3447",
+                    "surface": "#0c1324",
+                    "secondary-container": "#6f00be",
+                    "secondary-fixed-dim": "#ddb7ff",
+                    "on-secondary-fixed-variant": "#6900b3",
+                    "on-primary-fixed-variant": "#004395",
+                    "surface-container-low": "#151b2d",
+                    "tertiary-fixed-dim": "#2fd9f4",
+                    "on-tertiary-fixed-variant": "#004e5a",
+                    "primary-fixed": "#d8e2ff",
+                    "surface-container-high": "#23293c",
+                    "error": "#ffb4ab",
+                    "secondary": "#ddb7ff",
+                    "on-tertiary": "#00363e",
+                    "inverse-surface": "#dce1fb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "20px",
+                    "unit": "4px",
+                    "margin-desktop": "80px",
+                    "gutter": "24px",
+                    "bento-gap": "16px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-sm": ["Space Grotesk"],
+                    "display-lg": ["Space Grotesk"],
+                    "display-lg-mobile": ["Space Grotesk"],
+                    "headline-md": ["Space Grotesk"]
+            },
+            "fontSize": {
+                    "label-md": ["14px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-sm": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                    "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "display-lg-mobile": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .bg-mesh {
+            background: radial-gradient(circle at 20% 30%, rgba(173, 198, 255, 0.05) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 70%, rgba(47, 217, 244, 0.05) 0%, transparent 40%);
+        }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .floating-shape {
+            animation: float 8s ease-in-out infinite;
+        }
+        .input-glow:focus {
+            box-shadow: 0 0 15px rgba(173, 198, 255, 0.3);
+            border-color: #adc6ff;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden selection:bg-primary/30 selection:text-primary">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/30 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.5)] flex justify-between items-center px-6 md:px-margin-desktop h-20">
+<div class="font-headline-md text-headline-md font-bold text-primary tracking-tight">PredictiveRide AI</div>
+<div class="hidden md:flex gap-x-8 items-center">
+<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-all duration-300" href="#">Platform</a>
+<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-all duration-300" href="#">About</a>
+<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-all duration-300" href="#">Intelligence</a>
+<a class="text-primary border-b-2 border-primary pb-1 font-label-md text-label-md transition-all duration-300" href="#">Contact</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="hidden md:block text-on-surface font-label-md text-label-md hover:text-primary transition-colors">Sign In</button>
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-lg font-label-md text-label-md hover:shadow-[0_0_20px_rgba(173,198,255,0.4)] transition-all active:scale-95">Get Started</button>
+</div>
+</nav>
+<main class="relative min-h-screen pt-32 pb-20 px-6 md:px-margin-desktop max-w-7xl mx-auto z-10 bg-mesh">
+<!-- Decorative Background Shapes -->
+<div class="fixed top-1/4 -left-20 w-64 h-64 bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
+<div class="fixed bottom-1/4 -right-20 w-96 h-96 bg-tertiary/10 rounded-full blur-[120px] pointer-events-none"></div>
+<div class="absolute top-40 right-10 floating-shape opacity-20 pointer-events-none hidden lg:block">
+<svg fill="none" height="200" viewbox="0 0 200 200" width="200" xmlns="http://www.w3.org/2000/svg">
+<path d="M100 0L186.603 50V150L100 200L13.3975 150V50L100 0Z" fill="url(#grad1)" stroke="white" stroke-opacity="0.2"></path>
+<defs>
+<lineargradient gradientunits="userSpaceOnUse" id="grad1" x1="0" x2="200" y1="0" y2="200">
+<stop stop-color="#adc6ff"></stop>
+<stop offset="1" stop-color="#2fd9f4" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+<div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+<!-- Left Side: Contact Form -->
+<div class="space-y-12">
+<div class="space-y-4">
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg tracking-tight">Initiate <span class="text-primary">Contact</span></h1>
+<p class="text-on-surface-variant font-body-lg text-body-lg max-w-md">Our intelligence systems are ready to process your inquiries and fleet optimization requirements.</p>
+</div>
+<div class="glass-card p-8 md:p-10 rounded-xl space-y-6">
+<form class="space-y-6">
+<div class="grid md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant px-1">Full Name</label>
+<input class="w-full bg-surface-container-low border border-white/10 rounded-lg px-4 py-3 outline-none transition-all input-glow text-on-surface placeholder:text-outline/50" placeholder="Johnathan Doe" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant px-1">Work Email</label>
+<input class="w-full bg-surface-container-low border border-white/10 rounded-lg px-4 py-3 outline-none transition-all input-glow text-on-surface placeholder:text-outline/50" placeholder="j.doe@enterprise.com" type="email"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant px-1">Subject</label>
+<select class="w-full bg-surface-container-low border border-white/10 rounded-lg px-4 py-3 outline-none transition-all input-glow text-on-surface appearance-none">
+<option>Fleet Intelligence Integration</option>
+<option>Strategic Partnership Inquiry</option>
+<option>Technical Support</option>
+<option>Media &amp; Press</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant px-1">Message</label>
+<textarea class="w-full bg-surface-container-low border border-white/10 rounded-lg px-4 py-3 outline-none transition-all input-glow text-on-surface placeholder:text-outline/50 resize-none" placeholder="How can our AI redefine your logistics?" rows="4"></textarea>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary rounded-lg font-headline-sm text-headline-sm hover:scale-[1.02] active:scale-95 transition-all shadow-[0_10px_30px_rgba(173,198,255,0.2)] flex items-center justify-center gap-2 group" type="submit">
+                            Transmit Message
+                            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</form>
+</div>
+</div>
+<!-- Right Side: Contact Intelligence -->
+<div class="space-y-16">
+<!-- Contact Intelligence Bento -->
+<div class="space-y-8">
+<h2 class="font-headline-md text-headline-md text-tertiary flex items-center gap-3">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">psychology</span>
+                        Contact Intelligence
+                    </h2>
+<div class="grid gap-6">
+<div class="glass-card p-6 rounded-xl flex items-start gap-4 group hover:bg-white/5 transition-colors cursor-default">
+<div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined">auto_graph</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm mb-1">Accelerated Support</h3>
+<p class="text-on-surface-variant text-body-md">Our AI triages inquiries instantly, ensuring executive-level requests are routed to specialists within 12 minutes.</p>
+</div>
+</div>
+<div class="glass-card p-6 rounded-xl flex items-start gap-4 group hover:bg-white/5 transition-colors cursor-default">
+<div class="w-12 h-12 bg-tertiary/10 rounded-lg flex items-center justify-center text-tertiary shrink-0">
+<span class="material-symbols-outlined">public</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm mb-1">Global Presence</h3>
+<p class="text-on-surface-variant text-body-md">Connected globally, operating locally. Our network spans 4 major tech hubs for true 24/7 coverage.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Office Locations -->
+<div class="space-y-6">
+<h2 class="font-headline-md text-headline-md text-on-surface">Global Nodes</h2>
+<div class="grid sm:grid-cols-2 gap-4">
+<div class="border-l-2 border-primary/30 pl-4 py-2 hover:border-primary transition-colors cursor-default">
+<p class="font-label-md text-label-md text-primary uppercase">Silicon Valley</p>
+<p class="text-on-surface-variant text-body-md">242 Prediction Way, Palo Alto, CA</p>
+</div>
+<div class="border-l-2 border-primary/30 pl-4 py-2 hover:border-primary transition-colors cursor-default">
+<p class="font-label-md text-label-md text-primary uppercase">London Hub</p>
+<p class="text-on-surface-variant text-body-md">10 Fleet Street, London, UK</p>
+</div>
+<div class="border-l-2 border-primary/30 pl-4 py-2 hover:border-primary transition-colors cursor-default">
+<p class="font-label-md text-label-md text-primary uppercase">Tokyo Core</p>
+<p class="text-on-surface-variant text-body-md">Minato City, Tech District, Tokyo</p>
+</div>
+<div class="border-l-2 border-primary/30 pl-4 py-2 hover:border-primary transition-colors cursor-default">
+<p class="font-label-md text-label-md text-primary uppercase">Berlin Node</p>
+<p class="text-on-surface-variant text-body-md">Mitte Innovation Plaza, Berlin</p>
+</div>
+</div>
+</div>
+<!-- Social Links -->
+<div class="space-y-4">
+<p class="font-label-md text-label-md text-outline">Network Connections</p>
+<div class="flex gap-4">
+<a class="w-12 h-12 rounded-full glass-card flex items-center justify-center text-on-surface-variant hover:text-primary hover:border-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined">share</span>
+</a>
+<a class="w-12 h-12 rounded-full glass-card flex items-center justify-center text-on-surface-variant hover:text-primary hover:border-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined">alternate_email</span>
+</a>
+<a class="w-12 h-12 rounded-full glass-card flex items-center justify-center text-on-surface-variant hover:text-primary hover:border-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined">forum</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 bg-surface-container-lowest border-t border-white/5 mt-20">
+<div class="flex flex-col md:flex-row justify-between items-center px-6 md:px-margin-desktop max-w-7xl mx-auto gap-8">
+<div class="space-y-2 text-center md:text-left">
+<div class="font-headline-sm text-headline-sm text-on-surface font-bold">PredictiveRide AI</div>
+<p class="font-body-md text-body-md text-outline">© 2024 PredictiveRide AI. Engineered for the future of mobility.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="text-outline hover:text-tertiary transition-colors duration-200 font-body-md text-body-md" href="#">Privacy Policy</a>
+<a class="text-outline hover:text-tertiary transition-colors duration-200 font-body-md text-body-md" href="#">Terms of Service</a>
+<a class="text-outline hover:text-tertiary transition-colors duration-200 font-body-md text-body-md" href="#">API Status</a>
+<a class="text-outline hover:text-tertiary transition-colors duration-200 font-body-md text-body-md" href="#">Global Network</a>
+</div>
+</div>
+</footer>
+<!-- AI Assistant Floating Widget -->
+<div class="fixed bottom-8 right-8 z-50 group">
+<div class="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse group-hover:bg-tertiary/30 transition-colors"></div>
+<button class="relative w-16 h-16 bg-gradient-to-tr from-primary to-tertiary rounded-full flex items-center justify-center text-on-primary shadow-lg hover:scale-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</button>
+<!-- Tooltip -->
+<div class="absolute right-20 bottom-4 glass-card px-4 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+<p class="font-label-md text-label-md text-primary">Need instant assistance?</p>
+</div>
+</div>
+<script>
+        // Smooth parallax effect for floating shape
+        window.addEventListener('mousemove', (e) => {
+            const shape = document.querySelector('.floating-shape');
+            const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+            const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+            if (shape) {
+                shape.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            }
+        });
+
+        // Form submission micro-interaction
+        document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Processing...';
+            btn.classList.add('opacity-80', 'cursor-not-allowed');
+            
+            setTimeout(() => {
+                btn.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Transmission Successful';
+                btn.classList.replace('bg-primary', 'bg-tertiary-container');
+                btn.classList.replace('text-on-primary', 'text-on-tertiary-container');
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.replace('bg-tertiary-container', 'bg-primary');
+                    btn.classList.replace('text-on-tertiary-container', 'text-on-primary');
+                    btn.classList.remove('opacity-80', 'cursor-not-allowed');
+                    e.target.reset();
+                }, 3000);
+            }, 1500);
+        });
+    </script>
+</body></html>

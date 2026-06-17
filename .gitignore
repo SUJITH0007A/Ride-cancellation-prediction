@@ -1,0 +1,31 @@
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+
+# Java
+java-app/target/
+java-app/.settings/
+java-app/.classpath
+java-app/.project
+java-app/*.iml
+
+# Python
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.venv/
+venv/
+env/
+
+# IDEs and System
+.idea/
+.vscode/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.log

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PredictiveRide AI | Prediction Feed &amp; Analytics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-container": "#d6a9ff",
+                      "primary-fixed-dim": "#adc6ff",
+                      "on-error": "#690005",
+                      "error-container": "#93000a",
+                      "on-tertiary-container": "#002f36",
+                      "inverse-surface": "#dce1fb",
+                      "tertiary-container": "#009fb4",
+                      "surface-container-low": "#151b2d",
+                      "on-tertiary": "#00363e",
+                      "on-background": "#dce1fb",
+                      "outline": "#8c909f",
+                      "surface-container-highest": "#2e3447",
+                      "on-secondary": "#490080",
+                      "on-primary-fixed-variant": "#004395",
+                      "on-surface-variant": "#c2c6d6",
+                      "secondary-fixed-dim": "#ddb7ff",
+                      "surface-dim": "#0c1324",
+                      "on-primary-container": "#00285d",
+                      "secondary-fixed": "#f0dbff",
+                      "secondary": "#ddb7ff",
+                      "on-secondary-fixed-variant": "#6900b3",
+                      "surface-container-high": "#23293c",
+                      "inverse-primary": "#005ac2",
+                      "tertiary": "#2fd9f4",
+                      "surface-tint": "#adc6ff",
+                      "on-primary": "#002e6a",
+                      "on-error-container": "#ffdad6",
+                      "secondary-container": "#6f00be",
+                      "primary": "#adc6ff",
+                      "surface-variant": "#2e3447",
+                      "inverse-on-surface": "#2a3043",
+                      "primary-container": "#4d8eff",
+                      "on-tertiary-fixed": "#001f25",
+                      "background": "#0c1324",
+                      "on-tertiary-fixed-variant": "#004e5a",
+                      "on-surface": "#dce1fb",
+                      "on-primary-fixed": "#001a42",
+                      "on-secondary-fixed": "#2c0051",
+                      "tertiary-fixed": "#a2eeff",
+                      "surface": "#0c1324",
+                      "surface-container-lowest": "#070d1f",
+                      "primary-fixed": "#d8e2ff",
+                      "error": "#ffb4ab",
+                      "surface-bright": "#33394c",
+                      "outline-variant": "#424754",
+                      "surface-container": "#191f31",
+                      "tertiary-fixed-dim": "#2fd9f4"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "unit": "4px",
+                      "bento-gap": "16px",
+                      "margin-mobile": "20px",
+                      "margin-desktop": "80px",
+                      "gutter": "24px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Space Grotesk"],
+                      "display-lg": ["Space Grotesk"],
+                      "label-md": ["Inter"],
+                      "headline-sm": ["Space Grotesk"],
+                      "display-lg-mobile": ["Space Grotesk"],
+                      "body-lg": ["Inter"],
+                      "body-md": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                      "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                      "label-md": ["14px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-sm": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                      "display-lg-mobile": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        body {
+            background-color: #0c1324;
+            color: #dce1fb;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 15px rgba(47, 217, 244, 0.3);
+        }
+        .glow-purple {
+            box-shadow: 0 0 15px rgba(221, 183, 255, 0.3);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #2e3447;
+            border-radius: 10px;
+        }
+        .radar-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 3s ease-in-out forwards;
+        }
+        @keyframes dash {
+            to { stroke-dashoffset: 0; }
+        }
+        .pulse-live {
+            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+    </style>
+</head>
+<body class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface-container-lowest/80 backdrop-blur-lg border-r border-white/10 shadow-2xl flex flex-col py-6 gap-y-2 z-[60]">
+<div class="px-6 mb-8">
+<h1 class="font-headline-sm text-headline-sm text-primary font-bold tracking-tight">PredictiveRide AI</h1>
+<p class="text-on-surface-variant font-label-md text-label-md opacity-60">Enterprise Tier</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="text-on-surface-variant hover:bg-surface-variant/50 rounded-xl mx-2 flex items-center gap-3 px-4 py-3 transition-transform hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Home</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-variant/50 rounded-xl mx-2 flex items-center gap-3 px-4 py-3 transition-transform hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="font-label-md text-label-md">Analytics</span>
+</a>
+<a class="bg-primary-container text-on-primary-container rounded-xl mx-2 flex items-center gap-3 px-4 py-3 transition-transform scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="online_prediction">online_prediction</span>
+<span class="font-label-md text-label-md">Prediction Feed</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-variant/50 rounded-xl mx-2 flex items-center gap-3 px-4 py-3 transition-transform hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-label-md text-label-md">History</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-variant/50 rounded-xl mx-2 flex items-center gap-3 px-4 py-3 transition-transform hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full py-4 bg-primary text-on-primary rounded-xl font-label-md text-label-md flex items-center justify-center gap-2 hover:brightness-110 transition-all">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                New Analysis
+            </button>
+<div class="mt-6 flex items-center gap-3 px-2 py-4 border-t border-white/5">
+<div class="w-10 h-10 rounded-full bg-surface-container-high border border-white/10 overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNi-cdqKLGRvkuBkresnEVYA7lVtVWFi6zYQCmqxfW5o0gAkpi9ad5Bgg7BoK2RZ1yy6qeONhXauPlf2yMn8kti4iAq75KbhLg7Gc-Q5diuW7yyvC8ABuv9vpLMoZLgYwe8GMummKYf-l29TsbU_Ek24B3AorKLMcmuufvHiE84VybJJWSFt-5HkB9ou58uzbcB-j-oMUWLYZDRadVc-5oZp3TmfmSS4VhadVETc5iPyCcfaPl4YKfsErux3f4oslhOxKUKrcTFGRW"/>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Alex Chen</p>
+<p class="text-[10px] text-tertiary">Lead Strategist</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 flex-1 flex flex-col h-screen overflow-hidden">
+<!-- Top Action Bar -->
+<header class="h-20 px-8 flex items-center justify-between border-b border-white/10 glass-panel z-50">
+<div class="flex items-center gap-6">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Prediction Feed</h2>
+<div class="flex items-center gap-2 bg-surface-container-lowest px-3 py-1.5 rounded-full border border-white/5">
+<span class="w-2 h-2 rounded-full bg-tertiary pulse-live"></span>
+<span class="font-label-md text-[12px] text-tertiary uppercase tracking-widest">Live Mode</span>
+<button class="ml-2 w-8 h-4 bg-tertiary rounded-full relative flex items-center transition-all">
+<span class="absolute right-1 w-2.5 h-2.5 bg-white rounded-full"></span>
+</button>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 flex items-center gap-2 text-on-surface-variant hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="font-label-md text-label-md">Alert Configuration</span>
+</button>
+<button class="px-5 py-2.5 bg-surface-container-high text-on-surface rounded-lg border border-white/10 font-label-md text-label-md flex items-center gap-2 hover:bg-surface-container-highest transition-all">
+<span class="material-symbols-outlined" data-icon="ios_share">ios_share</span>
+                    Export Report
+                </button>
+</div>
+</header>
+<!-- Content Area -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Feed Section -->
+<section class="flex-1 flex flex-col p-8 overflow-hidden">
+<!-- Filters Bar -->
+<div class="flex flex-wrap items-center gap-4 mb-8">
+<div class="flex-1 min-w-[300px] relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border border-white/10 rounded-xl pl-12 pr-4 py-3 text-body-md focus:border-primary focus:ring-0 transition-all" placeholder="Search Ride ID, Passenger, or Destination..." type="text"/>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-low p-1 rounded-xl border border-white/10">
+<button class="px-4 py-2 font-label-md text-label-md text-on-surface bg-surface-container-highest rounded-lg">All</button>
+<button class="px-4 py-2 font-label-md text-label-md text-on-surface-variant hover:text-white">High Risk</button>
+<button class="px-4 py-2 font-label-md text-label-md text-on-surface-variant hover:text-white">Medium Risk</button>
+</div>
+<button class="px-4 py-3 bg-surface-container-low border border-white/10 rounded-xl flex items-center gap-2 text-on-surface-variant hover:text-white">
+<span class="material-symbols-outlined text-[20px]" data-icon="filter_list">filter_list</span>
+<span class="font-label-md text-label-md">Advanced Filters</span>
+</button>
+</div>
+<!-- Prediction Table -->
+<div class="flex-1 glass-panel rounded-2xl overflow-hidden flex flex-col shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+<div class="overflow-x-auto custom-scrollbar">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-white/10 bg-surface-container-high/50">
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant">Ride ID</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant">Passenger</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant">Destination</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant">Weather</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant">Risk Score</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant">AI Reason</th>
+<th class="px-6 py-4"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<!-- Row 1 -->
+<tr class="hover:bg-white/5 transition-colors cursor-pointer group" onclick="openDetail('PR-9283')">
+<td class="px-6 py-5 font-label-md text-label-md text-primary">PR-9283</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-secondary-container/20 flex items-center justify-center text-[10px] text-secondary">JS</div>
+<span class="font-body-md text-body-md text-on-surface">Julianne Smith</span>
+</div>
+</td>
+<td class="px-6 py-5 font-body-md text-body-md text-on-surface-variant">Heathrow Terminal 5</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-tertiary">
+<span class="material-symbols-outlined text-[18px]" data-icon="rainy">rainy</span>
+<span class="font-label-md text-[12px]">Heavy Rain</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-error glow-purple" style="width: 88%"></div>
+</div>
+<span class="font-label-md text-error">88%</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 bg-surface-container-highest rounded-full font-label-md text-[11px] text-on-surface-variant border border-white/5">History + Rain</span>
+</td>
+<td class="px-6 py-5 text-right">
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity" data-icon="chevron_right">chevron_right</span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-white/5 transition-colors cursor-pointer group" onclick="openDetail('PR-9284')">
+<td class="px-6 py-5 font-label-md text-label-md text-primary">PR-9284</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-tertiary-container/20 flex items-center justify-center text-[10px] text-tertiary">MK</div>
+<span class="font-body-md text-body-md text-on-surface">Marcus Kane</span>
+</div>
+</td>
+<td class="px-6 py-5 font-body-md text-body-md text-on-surface-variant">Financial District</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="wb_sunny">wb_sunny</span>
+<span class="font-label-md text-[12px]">Clear</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-tertiary glow-cyan" style="width: 12%"></div>
+</div>
+<span class="font-label-md text-tertiary">12%</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 bg-surface-container-highest rounded-full font-label-md text-[11px] text-on-surface-variant border border-white/5">Commuter Route</span>
+</td>
+<td class="px-6 py-5 text-right">
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity" data-icon="chevron_right">chevron_right</span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-white/5 transition-colors cursor-pointer group" onclick="openDetail('PR-9285')">
+<td class="px-6 py-5 font-label-md text-label-md text-primary">PR-9285</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-[10px] text-primary">RL</div>
+<span class="font-body-md text-body-md text-on-surface">Riley Loft</span>
+</div>
+</td>
+<td class="px-6 py-5 font-body-md text-body-md text-on-surface-variant">SOHO Studio</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-secondary">
+<span class="material-symbols-outlined text-[18px]" data-icon="cloud">cloud</span>
+<span class="font-label-md text-[12px]">Overcast</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-secondary glow-purple" style="width: 45%"></div>
+</div>
+<span class="font-label-md text-secondary">45%</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 bg-surface-container-highest rounded-full font-label-md text-[11px] text-on-surface-variant border border-white/5">Price Surge</span>
+</td>
+<td class="px-6 py-5 text-right">
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity" data-icon="chevron_right">chevron_right</span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-white/5 transition-colors cursor-pointer group" onclick="openDetail('PR-9286')">
+<td class="px-6 py-5 font-label-md text-label-md text-primary">PR-9286</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-[10px] text-on-surface">AM</div>
+<span class="font-body-md text-body-md text-on-surface">Anya Miller</span>
+</div>
+</td>
+<td class="px-6 py-5 font-body-md text-body-md text-on-surface-variant">Grand Central</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="wb_sunny">wb_sunny</span>
+<span class="font-label-md text-[12px]">Clear</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-error glow-purple" style="width: 92%"></div>
+</div>
+<span class="font-label-md text-error">92%</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 bg-surface-container-highest rounded-full font-label-md text-[11px] text-on-surface-variant border border-white/5">Wait Time Out</span>
+</td>
+<td class="px-6 py-5 text-right">
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity" data-icon="chevron_right">chevron_right</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<!-- Side Detail Panel -->
+<aside class="w-[400px] border-l border-white/10 bg-surface-container-lowest/50 backdrop-blur-2xl flex flex-col transform translate-x-full transition-transform duration-500 ease-in-out" id="detail-panel">
+<div class="p-8 h-full flex flex-col overflow-y-auto custom-scrollbar">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-primary" id="detail-id">PR-9283</h3>
+<p class="text-on-surface-variant font-label-md text-label-md">Cancellation Fingerprint</p>
+</div>
+<button class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors" onclick="closeDetail()">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<div class="mb-10 relative h-[240px] flex items-center justify-center">
+<!-- Radar Chart Placeholder (SVG) -->
+<svg class="w-full h-full" viewbox="0 0 200 200">
+<circle cx="100" cy="100" fill="none" r="80" stroke="rgba(255,255,255,0.05)" stroke-width="1"></circle>
+<circle cx="100" cy="100" fill="none" r="60" stroke="rgba(255,255,255,0.05)" stroke-width="1"></circle>
+<circle cx="100" cy="100" fill="none" r="40" stroke="rgba(255,255,255,0.05)" stroke-width="1"></circle>
+<path class="radar-line" d="M 100 20 L 160 80 L 140 160 L 60 160 L 40 80 Z" fill="rgba(173, 198, 255, 0.1)" stroke="#adc6ff" stroke-width="2"></path>
+<circle cx="100" cy="20" fill="#adc6ff" r="3"></circle>
+<circle cx="160" cy="80" fill="#adc6ff" r="3"></circle>
+<circle cx="140" cy="160" fill="#adc6ff" r="3"></circle>
+<circle cx="60" cy="160" fill="#adc6ff" r="3"></circle>
+<circle cx="40" cy="80" fill="#adc6ff" r="3"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+<span class="text-xs text-on-surface-variant uppercase tracking-widest opacity-40">Confidence</span>
+<span class="text-2xl font-bold text-primary">94.2%</span>
+</div>
+</div>
+<div class="space-y-6">
+<h4 class="font-label-md text-label-md text-on-surface border-b border-white/10 pb-2">Probability Factors</h4>
+<div class="space-y-4">
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-end">
+<span class="font-body-md text-body-md text-on-surface-variant">Historical Pattern</span>
+<span class="font-label-md text-label-md text-secondary">High Impact</span>
+</div>
+<div class="w-full h-1 bg-white/5 rounded-full">
+<div class="h-full bg-secondary w-4/5 rounded-full"></div>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-end">
+<span class="font-body-md text-body-md text-on-surface-variant">Weather Correlation</span>
+<span class="font-label-md text-label-md text-tertiary">Medium Impact</span>
+</div>
+<div class="w-full h-1 bg-white/5 rounded-full">
+<div class="h-full bg-tertiary w-2/3 rounded-full"></div>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-end">
+<span class="font-body-md text-body-md text-on-surface-variant">Traffic Delta</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Low Impact</span>
+</div>
+<div class="w-full h-1 bg-white/5 rounded-full">
+<div class="h-full bg-on-surface-variant w-1/4 rounded-full"></div>
+</div>
+</div>
+</div>
+<div class="mt-8 p-4 rounded-xl bg-primary-container/10 border border-primary/20">
+<div class="flex items-center gap-2 mb-2 text-primary">
+<span class="material-symbols-outlined text-[18px]" data-icon="auto_awesome">auto_awesome</span>
+<span class="font-label-md text-label-md">AI Insights</span>
+</div>
+<p class="text-body-md text-on-surface-variant text-[13px] leading-relaxed">
+                                System detects high churn probability for short-haul trips during peak precipitation. Recommend proactive re-routing or incentive offer to driver.
+                            </p>
+</div>
+</div>
+<div class="mt-auto pt-8 flex gap-3">
+<button class="flex-1 py-3 bg-surface-container-high border border-white/10 rounded-xl font-label-md text-label-md hover:bg-surface-container-highest transition-all">Ignore</button>
+<button class="flex-1 py-3 bg-primary text-on-primary rounded-xl font-label-md text-label-md hover:brightness-110 transition-all">Take Action</button>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- AI Assistant Floating Widget -->
+<div class="fixed bottom-8 right-8 z-[70] group">
+<div class="absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-tr from-primary to-tertiary rounded-full blur-xl opacity-50 group-hover:opacity-80 transition-opacity"></div>
+<button class="relative w-16 h-16 bg-surface-container-high border border-white/20 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="smart_toy">smart_toy</span>
+<div class="absolute -top-1 -right-1 w-5 h-5 bg-tertiary rounded-full border-4 border-surface-container-lowest animate-pulse"></div>
+</button>
+<!-- Tooltip -->
+<div class="absolute bottom-20 right-0 w-64 p-4 glass-panel rounded-2xl opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300 pointer-events-none">
+<p class="font-label-md text-label-md text-tertiary mb-1">AI Assistant</p>
+<p class="font-body-md text-[12px] text-on-surface-variant">I've detected 3 new high-risk rides in the last 5 minutes. Would you like a summary?</p>
+</div>
+</div>
+<script>
+        function openDetail(id) {
+            const panel = document.getElementById('detail-panel');
+            const idLabel = document.getElementById('detail-id');
+            idLabel.innerText = id;
+            panel.classList.remove('translate-x-full');
+            panel.classList.add('translate-x-0');
+        }
+
+        function closeDetail() {
+            const panel = document.getElementById('detail-panel');
+            panel.classList.remove('translate-x-0');
+            panel.classList.add('translate-x-full');
+        }
+
+        // Simple row interaction simulator
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('click', function() {
+                // Remove active class from others
+                document.querySelectorAll('tbody tr').forEach(r => r.classList.remove('bg-white/10'));
+                // Add active to this
+                this.classList.add('bg-white/10');
+            });
+        });
+    </script>
+</body></html>
