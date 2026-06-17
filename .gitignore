@@ -4,6 +4,7 @@ frontend/dist/
 frontend/dist-ssr/
 
 # Java
+java-app/src/main/resources/config.properties
 java-app/target/
 java-app/.settings/
 java-app/.classpath
@@ -18,6 +19,7 @@ java-app/*.iml
 .venv/
 venv/
 env/
+.env
 
 # IDEs and System
 .idea/

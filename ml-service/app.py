@@ -17,10 +17,23 @@ try:
 except ImportError:
     DB_AVAILABLE = False
 
-DB_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://postgres:COMFORT@@sanvi360@db.ilqheoyaqbzdmqsaasaw.supabase.co:5432/postgres?sslmode=require",
-)
+# Load environment variables from .env file if it exists
+env_path = os.path.join(os.path.dirname(__file__), ".env")
+if os.path.exists(env_path):
+    with open(env_path, "r") as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith("#"):
+                parts = line.split("=", 1)
+                if len(parts) == 2:
+                    os.environ[parts[0].strip()] = parts[1].strip()
+
+DB_URL = os.getenv("DATABASE_URL")
+if not DB_URL:
+    raise ValueError(
+        "DATABASE_URL environment variable is missing. "
+        "Define it in the environment or in a 'ml-service/.env' file."
+    )
 
 
 def get_db():
@@ -33,7 +46,19 @@ MODEL_FILE = os.path.join(BASE_DIR, "models", "cancellation_model.joblib")
 METADATA_FILE = os.path.join(BASE_DIR, "models", "model_metadata.joblib")
 
 app = Flask(__name__)
-CORS(app)
+env = os.getenv("FLASK_ENV", "development")
+
+if env == "production":
+    allowed_origins = os.getenv("ALLOWED_ORIGINS", "").split(",")
+    allowed_origins = [o.strip() for o in allowed_origins if o.strip()]
+    if allowed_origins:
+        CORS(app, origins=allowed_origins)
+    else:
+        # Default to wildcard or warning if no specific origins are defined in production
+        CORS(app)
+else:
+    CORS(app)
+
 
 model = None
 metadata = None
@@ -249,5 +274,11 @@ def get_analytics():
 
 if __name__ == "__main__":
     load_artifacts()
-    print("Ride Cancellation ML API running on http://127.0.0.1:5000")
-    app.run(host="127.0.0.1", port=5000, debug=False)
+    env = os.getenv("FLASK_ENV", "development")
+    if env == "production":
+        print("Starting Ride Cancellation ML API in PRODUCTION mode (Waitress) on port 5000...")
+        from waitress import serve
+        serve(app, host="0.0.0.0", port=5000)
+    else:
+        print("Starting Ride Cancellation ML API in DEVELOPMENT mode on http://127.0.0.1:5000")
+        app.run(host="127.0.0.1", port=5000, debug=True)
